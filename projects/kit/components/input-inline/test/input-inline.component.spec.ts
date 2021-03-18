@@ -1,40 +1,25 @@
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {identity, TuiStringHandler} from '@taiga-ui/cdk';
-import {TuiTextMaskOptions} from '@taiga-ui/core';
-import {NativeInputPO, PageObject} from '@taiga-ui/testing';
+import {PageObject} from '@taiga-ui/testing';
 import {configureTestSuite} from 'ng-bullet';
 import {TuiInputInlineComponent} from '../input-inline.component';
 import {TuiInputInlineModule} from '../input-inline.module';
 
-const D = /\d/;
-
 describe('InputInline', () => {
     @Component({
-        template: `
-            <tui-input-inline
-                [formControl]="control"
-                [textMaskOptions]="textMaskOptions"
-                [unmaskHandler]="unmaskHandler"
-            ></tui-input-inline>
-        `,
+        template: ` <tui-input-inline [formControl]="control"></tui-input-inline> `,
     })
     class TestComponent {
         @ViewChild(TuiInputInlineComponent, {static: true})
         component: TuiInputInlineComponent;
 
         control = new FormControl('');
-
-        textMaskOptions: TuiTextMaskOptions | null = null;
-
-        unmaskHandler: TuiStringHandler<string> = identity;
     }
 
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let pageObject: PageObject<TestComponent>;
-    let inputPO: NativeInputPO;
     const testContext = {
         get prefix() {
             return 'tui-input-inline__';
@@ -53,53 +38,26 @@ describe('InputInline', () => {
         pageObject = new PageObject(fixture);
         testComponent = fixture.componentInstance;
         fixture.detectChanges();
-
-        inputPO = new NativeInputPO(fixture, `tui-input-inline__native`);
-    });
-
-    describe('Mask', () => {
-        beforeEach(() => {
-            testComponent.textMaskOptions = {
-                guide: false,
-                mask: [D, D, D, D, ' ', D, D, D, D, ' ', D, D, D, D, ' ', D, D, D, D],
-            };
-            fixture.detectChanges();
-        });
-
-        it('Masks value', () => {
-            inputPO.sendText('12345');
-
-            expect(testComponent.control.value).toBe('1234 5');
-        });
-
-        it('unmasks value', () => {
-            testComponent.unmaskHandler = value => value.replace(/ /g, '');
-            fixture.detectChanges();
-            inputPO.sendText('12345');
-
-            expect(inputPO.value).toBe('1234 5');
-            expect(testComponent.control.value).toBe('12345');
-        });
     });
 
     describe('placeholder', () => {
-        it('отображается, если нет значения', () => {
+        it('displayed if no value', () => {
             expect(getPlaceholder()).not.toBeNull();
         });
 
-        it('не отображается, если есть значение', () => {
+        it('not displayed if there is a value', () => {
             testComponent.control.setValue('123');
             fixture.detectChanges();
             expect(getPlaceholder()).toBeNull();
         });
     });
 
-    describe('поле ввода', () => {
-        it('редактируемо, если не заблокировано', () => {
+    describe('entry field', () => {
+        it('editable if not locked', () => {
             expect(getNative()!.nativeElement.disabled).toBe(false);
         });
 
-        it('не редактируемо, если заблокировано', done => {
+        it('not editable if locked', done => {
             testComponent.control.disable();
             fixture.detectChanges();
 

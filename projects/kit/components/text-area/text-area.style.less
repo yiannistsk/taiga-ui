@@ -6,21 +6,21 @@
 @margin: 7px;
 
 :host {
-    .text-body-m();
+    font: var(--tui-font-text-m);
     position: relative;
     z-index: 0;
     display: flex;
     flex-direction: column;
     min-height: @height;
-    border-radius: var(--tui-radius);
+    border-radius: var(--tui-radius-m);
     color: var(--tui-text-01);
 
-    &[data-tui-host-mode='onDark'] {
+    &[data-mode='onDark'] {
         color: var(--tui-base-01);
     }
 
     &[data-tui-host-size='m'] {
-        .text-body-s();
+        font: var(--tui-font-text-s);
         min-height: @height - 20px;
     }
 
@@ -158,7 +158,7 @@
         padding-left: 13px; // compensation of unkillable padding in mobile safari
     }
 
-    :host[data-tui-host-mode='onDark']._disabled & {
+    :host[data-mode='onDark']._disabled & {
         color: var(--tui-text-03-night);
     }
 }
@@ -213,7 +213,7 @@
 }
 
 .counter {
-    .text-body-s();
+    font: var(--tui-font-text-s);
     position: absolute;
     bottom: 8px;
     right: 12px;
@@ -222,7 +222,7 @@
     text-align: right;
     color: var(--tui-text-03);
 
-    :host[data-tui-host-mode='onDark'] & {
+    :host[data-mode='onDark'] & {
         color: var(--tui-text-03-night);
     }
 }

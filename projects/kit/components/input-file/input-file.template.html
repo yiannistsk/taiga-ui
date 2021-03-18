@@ -10,22 +10,27 @@
     [readOnly]="readOnly"
     [disabled]="computedDisabled"
 >
-    <label automation-id="tui-input-file__label">
+    <label
+        *ngIf="(units$ | async) as units"
+        automation-id="tui-input-file__label"
+    >
         <a tuiLink>
             <span
                 polymorpheus-outlet
                 class="inline"
-                [content]="computedLink"
+                [content]="computedLink$ | async"
             ></span>
         </a>
-        <span *ngIf="computedLabel">&nbsp;</span>
-        <span
-            polymorpheus-outlet
-            class="inline"
-            [content]="computedLabel"
-        ></span>
+        <ng-container *ngIf="computedLabel$ | async as computedLabel">
+            <span>&nbsp;</span>
+            <span
+                polymorpheus-outlet
+                class="inline"
+                [content]="computedLabel"
+            ></span>
+        </ng-container>
         <input
-            *ngIf="!readOnly && !computedDisabled"
+            *ngIf="!readOnly && !computedDisabled && (inputFileTexts$ | async) as texts"
             #input
             class="native"
             type="file"
@@ -34,22 +39,28 @@
             [accept]="accept"
             [multiple]="multiple"
             [tuiFocusable]="focusable"
-            (change)="onFilesSelected(input)"
+            (change)="onFilesSelected(input, texts, units)"
             (tuiHoveredChange)="onHovered($event)"
             (tuiFocusedChange)="onFocused($event)"
             (tuiPressedChange)="onPressed($event)"
-            (tuiDroppableDropped)="onDropped($event)"
+            (tuiDroppableDropped)="onDropped($event, texts, units)"
             (tuiDroppableDragOverChange)="onDragOver($event)"
         />
     </label>
 </tui-wrapper>
 
-<section tuiGroup class="files" orientation="vertical" [collapsed]="true">
+<section
+    *tuiLet="mode$ | async as mode"
+    tuiGroup
+    class="files"
+    orientation="vertical"
+    [collapsed]="true"
+>
     <tui-file
         *ngFor="let file of rejectedFiles"
         automation-id="tui-input-file__error"
         state="error"
-        [attr.data-mode]="mode$ | async"
+        [attr.data-mode]="mode"
         [showSize]="showSize"
         [allowDelete]="allowDelete"
         [size]="size"
@@ -60,7 +71,7 @@
         *ngFor="let file of computedLoading"
         automation-id="tui-input-file__loading"
         state="loading"
-        [attr.data-mode]="mode$ | async"
+        [attr.data-mode]="mode"
         [showSize]="showSize"
         [allowDelete]="allowDelete"
         [size]="size"
@@ -70,7 +81,7 @@
     <tui-file
         *ngFor="let file of readyFiles"
         automation-id="tui-input-file__file"
-        [attr.data-mode]="mode$ | async"
+        [attr.data-mode]="mode"
         [showSize]="showSize"
         [allowDelete]="allowDelete"
         [size]="size"

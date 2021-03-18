@@ -1,4 +1,8 @@
-<tui-doc-page header="NotificationsService" package="CORE">
+<tui-doc-page
+    header="NotificationsService"
+    package="CORE"
+    path="core/modules/notifications/notifications.service.ts"
+>
     <ng-template pageTab>
         <p i18n>Service to show notifications</p>
         <p i18n>
@@ -122,6 +126,14 @@
                 [(documentationPropertyValue)]="hasCloseButton"
             >
                 Has close button
+            </ng-template>
+            <ng-template
+                i18n
+                documentationPropertyName="hasIcon"
+                documentationPropertyType="boolean"
+                [(documentationPropertyValue)]="hasIcon"
+            >
+                Has icon
             </ng-template>
         </tui-doc-documentation>
     </ng-template>

@@ -1,4 +1,4 @@
-@import '../../../styles/basic/basic-imports';
+@import '../../../styles/taiga-ui-local.less';
 
 @arrowSize: 8px;
 @arrowOffset: 14px;
@@ -9,14 +9,14 @@
     top: 0;
     left: 0;
     max-width: 288px;
-    min-height: @height-large;
+    min-height: var(--tui-height-m);
     padding: @space * 3 @space * 4;
     background: var(--tui-primary);
-    border-radius: var(--tui-radius-xl);
+    border-radius: var(--tui-radius-l);
     color: var(--tui-primary-text);
     box-sizing: border-box;
 
-    &:not([data-tui-host-mode='overflow']):before,
+    &:not([data-mode='overflow']):before,
     .arrow {
         content: '';
         position: absolute;
@@ -75,12 +75,12 @@
         left: -@arrowSize / 2;
     }
 
-    &[data-tui-host-mode='error'] {
+    &[data-mode='error'] {
         background-color: var(--tui-error-fill);
     }
 
-    &[data-tui-host-mode='onDark'],
-    &[data-tui-host-mode='overflow'] {
+    &[data-mode='onDark'],
+    &[data-mode='overflow'] {
         .shadow(2);
         border: 1px solid var(--tui-base-03);
         background-color: var(--tui-base-01);
@@ -113,7 +113,7 @@
         }
     }
 
-    &[data-tui-host-mode='overflow'] {
+    &[data-mode='overflow'] {
         max-width: none;
     }
 
@@ -123,10 +123,10 @@
 }
 
 .tooltip {
-    .text-body-s();
+    font: var(--tui-font-text-s);
     word-wrap: break-word;
 
-    :host[data-tui-host-mode='overflow'] & {
+    :host[data-mode='overflow'] & {
         font: inherit;
     }
 }

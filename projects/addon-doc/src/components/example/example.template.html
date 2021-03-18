@@ -8,7 +8,7 @@
         class="link-icon"
         icon="tuiIconLinkLarge"
         appearance="icon"
-        [title]="copyTexts[0]"
+        [title]="copy$ | async"
         (click)="copyExampleLink()"
     ></button>
 </h3>
@@ -18,6 +18,16 @@
         <tui-tabs [(activeItemIndex)]="activeItemIndex">
             <button *ngFor="let tab of tabs" tuiTab>{{tab}}</button>
         </tui-tabs>
+
+        <button
+            *ngIf="codeEditor"
+            tuiButton
+            appearance="flat"
+            size="s"
+            (click)="codeEditor.open(componentName, id || '',  processedContent)"
+        >
+            Edit on {{codeEditor.name}}
+        </button>
     </div>
     <ng-container [ngSwitch]="activeItem">
         <div
@@ -28,9 +38,10 @@
             <ng-content></ng-content>
         </div>
         <ng-template #codeTab>
-            <tui-doc-copy class="copy-code" (click)="copyCodeExample()">
-                {{copyTexts[0]}}
-            </tui-doc-copy>
+            <tui-doc-copy
+                class="copy-code"
+                [cdkCopyToClipboard]="code"
+            ></tui-doc-copy>
             <tui-doc-code [code]="code"></tui-doc-code>
         </ng-template>
     </ng-container>

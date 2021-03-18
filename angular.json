@@ -41,6 +41,33 @@
                 }
             }
         },
+        "i18n": {
+            "root": "projects/i18n",
+            "sourceRoot": "projects/i18n",
+            "projectType": "library",
+            "prefix": "tui",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "options": {
+                        "tsConfig": "projects/i18n/tsconfig.lib.json",
+                        "project": "projects/i18n/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/i18n/tsconfig.lib.prod.json"
+                        }
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": ["projects/i18n/tsconfig.lib.json"],
+                        "exclude": ["**/node_modules/**"]
+                    }
+                }
+            }
+        },
         "core": {
             "root": "projects/core",
             "sourceRoot": "projects/core",
@@ -498,7 +525,10 @@
                         "baseHref": "/",
                         "deployUrl": "/",
                         "showCircularDependencies": false,
-                        "styles": ["projects/demo/src/styles.less"],
+                        "styles": [
+                            "projects/demo/src/styles.less",
+                            "projects/demo/src/styles.scss"
+                        ],
                         "stylePreprocessorOptions": {
                             "includePaths": ["projects/core/styles"]
                         },
@@ -560,8 +590,8 @@
                             ],
                             "fileReplacements": [
                                 {
-                                    "replace": "projects/demo/src/changeDetectionStrategy.ts",
-                                    "with": "projects/demo/src/changeDetectionStrategy.def.ts"
+                                    "replace": "projects/demo/src/change-detection-strategy.ts",
+                                    "with": "projects/demo/src/change-detection-strategy.def.ts"
                                 }
                             ]
                         },
@@ -574,8 +604,8 @@
                             ],
                             "fileReplacements": [
                                 {
-                                    "replace": "public/projects/demo/src/viewEncapsulation.ts",
-                                    "with": "public/projects/demo/src/viewEncapsulation.shadow.ts"
+                                    "replace": "public/projects/demo/src/view-encapsulation.ts",
+                                    "with": "public/projects/demo/src/view-encapsulation.shadow.ts"
                                 }
                             ]
                         },
@@ -668,5 +698,8 @@
             }
         }
     },
-    "defaultProject": "demo"
+    "defaultProject": "demo",
+    "cli": {
+        "analytics": "ce6ae05d-f6ae-4271-89e4-40e616f7090f"
+    }
 }

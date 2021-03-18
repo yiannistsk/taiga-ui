@@ -1,29 +1,16 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Inject} from '@angular/core';
-import {
-    TUI_IS_MOBILE,
-    TuiAriaDialogContext,
-    TuiBaseDialog,
-    TuiBaseDialogContext,
-    tuiPure,
-} from '@taiga-ui/cdk';
+import {TUI_IS_MOBILE, TuiDialog} from '@taiga-ui/cdk';
 import {tuiFadeIn, tuiSlideInTop} from '@taiga-ui/core/animations';
 import {TuiAnimationOptions, TuiDialogOptions} from '@taiga-ui/core/interfaces';
 import {TUI_CLOSE_WORD} from '@taiga-ui/core/tokens';
 import {TuiSizeL, TuiSizeS} from '@taiga-ui/core/types';
 import {POLYMORPHEUS_CONTEXT, PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {Observable} from 'rxjs';
-import {filter} from 'rxjs/operators';
-
 import {TUI_DIALOG_CLOSE_STREAM, TUI_DIALOG_PROVIDERS} from './dialog.providers';
 
 const SMALL_DIALOGS_ANIMATION = {value: '', params: {start: '40px'}};
 const FULLSCREEN_DIALOGS_ANIMATION = {value: '', params: {start: '100vh'}};
 const REQUIRED_ERROR = new Error('Required dialog was dismissed');
-
-type ExternalContext<O, I> = TuiBaseDialogContext<O> & TuiDialogOptions<I>;
-type InternalContext<O, I> = TuiBaseDialog<O, ExternalContext<O, I>> &
-    TuiDialogOptions<I> &
-    TuiAriaDialogContext;
 
 // @dynamic
 @Component({
@@ -41,18 +28,18 @@ export class TuiDialogComponent<O, I> {
     constructor(
         @Inject(TUI_IS_MOBILE) private readonly isMobile: boolean,
         @Inject(POLYMORPHEUS_CONTEXT)
-        private readonly internal: InternalContext<O, I>,
+        readonly context: TuiDialog<TuiDialogOptions<I>, O>,
         @Inject(TUI_DIALOG_CLOSE_STREAM)
         close$: Observable<unknown>,
-        @Inject(TUI_CLOSE_WORD) readonly closeWord: string,
+        @Inject(TUI_CLOSE_WORD) readonly closeWord$: Observable<string>,
     ) {
-        close$.pipe(filter(() => this.context.dismissible)).subscribe(() => {
+        close$.subscribe(() => {
             this.close();
         });
     }
 
     @HostBinding('attr.data-size')
-    get size(): TuiSizeS | TuiSizeL | 'fullscreen' {
+    get size(): TuiSizeS | TuiSizeL | 'fullscreen' | 'page' {
         return this.context.size;
     }
 
@@ -76,29 +63,9 @@ export class TuiDialogComponent<O, I> {
         }
     }
 
-    get content(): PolymorpheusContent<ExternalContext<O, I>> {
-        return this.internal.content;
-    }
-
-    @tuiPure
-    get context(): ExternalContext<O, I> {
-        const internal = {...this.internal};
-        const $implicit = internal.observer;
-        const completeWith = (result: O) => {
-            $implicit.next(result);
-            $implicit.complete();
-        };
-
-        return {
-            ...internal,
-            completeWith,
-            $implicit,
-        };
-    }
-
     @HostBinding('@tuiSlideInTop')
     get slideInTop(): TuiAnimationOptions {
-        return this.size === 'fullscreen' || this.isMobile
+        return this.size === 'fullscreen' || this.size === 'page' || this.isMobile
             ? FULLSCREEN_DIALOGS_ANIMATION
             : SMALL_DIALOGS_ANIMATION;
     }

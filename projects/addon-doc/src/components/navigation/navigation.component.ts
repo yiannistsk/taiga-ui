@@ -1,14 +1,14 @@
 import {DOCUMENT, Location} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Inject} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {tuiPure} from '@taiga-ui/cdk';
-import {getScreenWidth} from '@taiga-ui/core';
+import {tuiPure, uniqBy} from '@taiga-ui/cdk';
+import {getScreenWidth, TuiModeDirective} from '@taiga-ui/core';
 import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 import {TuiDocPage} from '../../interfaces/page';
 import {TUI_DOC_SEARCH_TEXT} from '../../tokens/i18n';
 import {TuiDocPages} from '../../types/pages';
 import {transliterateKeyboardLayout} from '../../utils/transliterate-keyboard-layout';
-import {uniqBy} from '../../utils/uniq-by';
 import {
     NAVIGATION_ITEMS,
     NAVIGATION_LABELS,
@@ -33,11 +33,18 @@ export class TuiDocNavigationComponent {
     menuOpen = false;
     openGroupsArr: boolean[] = [];
 
+    readonly mode$ = this.mode.change$.pipe(
+        startWith(null),
+        map(() => this.mode.mode || 'onLight'),
+    );
+
     constructor(
         @Inject(Title) titleService: Title,
         @Inject(Location) locationRef: Location,
         @Inject(NAVIGATION_TITLE) title$: Observable<string>,
         @Inject(DOCUMENT) private readonly documentRef: Document,
+        @Inject(TuiModeDirective)
+        private readonly mode: TuiModeDirective,
         @Inject(NAVIGATION_LABELS) readonly labels: string,
         @Inject(NAVIGATION_ITEMS)
         readonly items: ReadonlyArray<TuiDocPages>,

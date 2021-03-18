@@ -3,7 +3,7 @@
 @padding: 12px;
 
 :host {
-    .text-body-s(2);
+    font: var(--tui-font-text-s);
     .transition(background-color);
     position: relative;
     display: inline-flex;
@@ -58,7 +58,7 @@
             background-color: var(--tui-error-bg-hover);
         }
 
-        &[data-tui-host-mode='onDark'] {
+        &[data-mode='onDark'] {
             background-color: var(--tui-error-bg-night);
             color: var(--tui-text-01-night);
 
@@ -83,7 +83,7 @@
             background-color: var(--tui-success-bg-hover);
         }
 
-        &[data-tui-host-mode='onDark'] {
+        &[data-mode='onDark'] {
             background-color: var(--tui-success-bg-night);
             color: var(--tui-text-01-night);
 
@@ -108,7 +108,7 @@
             background-color: var(--tui-warning-bg-hover);
         }
 
-        &[data-tui-host-mode='onDark'] {
+        &[data-mode='onDark'] {
             background-color: var(--tui-warning-bg-night);
             color: var(--tui-text-01-night);
 
@@ -122,7 +122,7 @@
     &[data-tui-host-status='default'] {
         background-color: var(--tui-base-06);
 
-        &:not([data-tui-host-mode]) {
+        &:not([data-mode]) {
             &._hoverable:hover {
                 background-color: var(--tui-base-07);
             }
@@ -132,7 +132,7 @@
             }
         }
 
-        &[data-tui-host-mode='onDark'] {
+        &[data-mode='onDark'] {
             background-color: var(--tui-clear-inverse);
 
             &._hoverable:hover {
@@ -148,7 +148,7 @@
             }
         }
 
-        &[data-tui-host-mode='onLight'] {
+        &[data-mode='onLight'] {
             background-color: var(--tui-clear);
             color: var(--tui-text-01);
 
@@ -187,22 +187,21 @@
     }
 
     &[data-tui-host-size='s'] {
-        .text-body-xs();
-        height: @height-extra-extra-small;
-        line-height: @height-extra-extra-small;
-        min-width: @height-extra-extra-small;
+        font: var(--tui-font-text-xs);
+        height: 20px;
+        min-width: 20px;
     }
 
     &[data-tui-host-size='m'] {
-        height: @height-extra-small;
-        line-height: @height-extra-small;
-        min-width: @height-extra-small;
+        height: var(--tui-height-xs);
+        line-height: var(--tui-height-xs);
+        min-width: var(--tui-height-xs);
     }
 
     &[data-tui-host-size='l'] {
-        height: @height-small;
-        line-height: @height-small;
-        min-width: @height-small;
+        height: var(--tui-height-s);
+        line-height: var(--tui-height-s);
+        min-width: var(--tui-height-s);
     }
 
     &:before {

@@ -48,7 +48,7 @@
         }
 
         &._focus-visible .highlight {
-            background: #fff;
+            background: var(--tui-clear-inverse);
             color: var(--tui-text-01);
         }
     }
@@ -129,4 +129,8 @@
     width: 100%;
     align-items: center;
     justify-content: inherit;
+
+    ::ng-deep > * {
+        flex-shrink: 0;
+    }
 }

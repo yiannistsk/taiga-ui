@@ -20,13 +20,14 @@
         cursor: default;
     }
 
-    :host[data-tui-host-mode='onDark'] & {
+    :host[data-mode='onDark'] & {
         color: var(--tui-base-01);
     }
 }
 
 .content {
-    .text-body-s(2);
+    font: var(--tui-font-text-s);
+    line-height: 16px;
     word-wrap: break-word;
     min-width: 0;
 
@@ -39,7 +40,7 @@
     }
 
     :host[data-tui-host-size='l'] & {
-        .text-body-m();
+        font: var(--tui-font-text-m);
         margin-left: 12px;
     }
 }

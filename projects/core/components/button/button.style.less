@@ -1,4 +1,4 @@
-@import '../../styles/basic/basic-imports';
+@import '../../styles/taiga-ui-local.less';
 
 @padding-xs: 8px;
 @padding-s: 12px;
@@ -16,7 +16,7 @@
     display: inline-block;
     flex-shrink: 0;
     vertical-align: top;
-    border-radius: var(--tui-radius);
+    border-radius: var(--tui-radius-m);
     user-select: none;
     text-decoration: none;
     font-weight: bold;
@@ -36,57 +36,57 @@
     }
 
     &[data-tui-host-size='xs'] {
-        height: @height-extra-small;
+        height: var(--tui-height-xs);
         font-weight: normal;
 
         &[data-tui-host-shape='square'],
         &[tuiIconButton] {
-            height: @height-extra-small;
-            width: @height-extra-small;
+            height: var(--tui-height-xs);
+            width: var(--tui-height-xs);
         }
     }
 
     &[data-tui-host-size='s'] {
-        height: @height-small;
+        height: var(--tui-height-s);
         font-weight: normal;
 
         &[data-tui-host-shape='square'],
         &[tuiIconButton] {
-            height: @height-small;
-            width: @height-small;
+            height: var(--tui-height-s);
+            width: var(--tui-height-s);
         }
     }
 
     &[data-tui-host-size='m'] {
-        height: @height-large;
+        height: var(--tui-height-m);
         font-size: @font-size-large;
 
         &[data-tui-host-shape='square'],
         &[tuiIconButton] {
-            height: @height-large;
-            width: @height-large;
+            height: var(--tui-height-m);
+            width: var(--tui-height-m);
         }
     }
 
     &[data-tui-host-size='l'] {
-        height: @height-extra-large;
+        height: var(--tui-height-l);
         font-size: @font-size-large;
 
         &[data-tui-host-shape='square'],
         &[tuiIconButton] {
-            height: @height-extra-large;
-            width: @height-extra-large;
+            height: var(--tui-height-l);
+            width: var(--tui-height-l);
         }
     }
 
     &[data-tui-host-size='xl'] {
-        height: @height-extra-extra-large;
+        height: 60px;
         font-size: @font-size-large;
 
         &[data-tui-host-shape='square'],
         &[tuiIconButton] {
-            height: @height-extra-extra-large;
-            width: @height-extra-extra-large;
+            height: 60px;
+            width: 60px;
         }
     }
 }
@@ -101,7 +101,7 @@
 }
 
 .right {
-    margin: 0 -@icon-margin 0 @icon-margin / 2;
+    margin: 0 -@icon-margin / 2 0 @icon-margin;
 }
 
 .icon {

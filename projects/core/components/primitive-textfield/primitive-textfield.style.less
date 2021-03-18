@@ -1,6 +1,13 @@
-@import '../../styles/basic/basic-imports';
+@import '../../styles/taiga-ui-local.less';
 
 .textfield();
+
+.value {
+    height: 0;
+    display: block;
+    visibility: hidden;
+    white-space: pre;
+}
 
 .custom-content {
     position: relative;
@@ -27,11 +34,11 @@
         color: var(--tui-text-02);
     }
 
-    :host[data-tui-host-mode='onDark']._hovered:not(._readonly) & {
+    :host[data-mode='onDark']._hovered:not(._readonly) & {
         color: var(--tui-text-01-night);
     }
 
-    :host[data-tui-host-mode='onLight']._hovered:not(._readonly) & {
+    :host[data-mode='onLight']._hovered:not(._readonly) & {
         color: var(--tui-text-01);
     }
 }

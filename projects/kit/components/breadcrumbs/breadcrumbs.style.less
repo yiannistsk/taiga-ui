@@ -3,14 +3,14 @@
 :host {
     display: flex;
     align-items: center;
-    height: @height-medium;
+    height: 40px;
 
     &[data-tui-host-size='m'] {
-        .text-body-s(2);
+        font: var(--tui-font-text-s);
     }
 
     &[data-tui-host-size='l'] {
-        .text-body-m(2);
+        font: var(--tui-font-text-m);
     }
 }
 
@@ -20,7 +20,7 @@
 }
 
 // specificity is the reason of this selector
-a.active-link[data-tui-host-mode='onLight'] {
+a.active-link[data-mode='onLight'] {
     color: var(--tui-text-03);
     pointer-events: none;
 }

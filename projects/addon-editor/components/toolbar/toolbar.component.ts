@@ -18,16 +18,14 @@ import {USER_AGENT} from '@ng-web-apis/common';
 import {defaultEditorTools} from '@taiga-ui/addon-editor/constants';
 import {TuiEditorTool} from '@taiga-ui/addon-editor/enums';
 import {TuiEditorFontOption} from '@taiga-ui/addon-editor/interfaces';
-import {
-    EditorToolbarTexts,
-    TUI_EDITOR_TOOLBAR_TEXTS,
-    TUI_IMAGE_LOADER,
-} from '@taiga-ui/addon-editor/tokens';
+import {TUI_IMAGE_LOADER} from '@taiga-ui/addon-editor/tokens';
+import {TUI_EDITOR_TOOLBAR_TEXTS} from '@taiga-ui/addon-editor/tokens';
 import {isSelectionIn, tuiInsertHtml} from '@taiga-ui/addon-editor/utils';
 import {
     EMPTY_QUERY,
     isFirefox,
     isNativeFocusedIn,
+    isNumber,
     setNativeFocused,
     tuiDefaultProp,
     TuiDestroyService,
@@ -96,34 +94,34 @@ export class TuiToolbarComponent {
         {
             size: '2',
             px: 13,
-            name: 'Небольшой',
+            name: 'Small',
         },
         {
             size: '3',
             px: 15,
-            name: 'Обычный',
+            name: 'Normal',
         },
         {
             size: '4',
             px: 17,
-            name: 'Крупный',
+            name: 'Large',
         },
         {
             size: '5',
             px: 24,
-            family: 'var(--tui-heading-font)',
-            name: 'Подзаголовок',
+            family: 'var(--tui-font-heading)',
+            name: 'Subtitle',
         },
         {
             size: '6',
             px: 30,
-            family: 'var(--tui-heading-font)',
-            name: 'Заголовок',
+            family: 'var(--tui-font-heading)',
+            name: 'Title',
         },
     ];
 
     // TODO: i18n
-    readonly codesOptions: readonly string[] = ['Код в тексте', 'Код в блоке'];
+    readonly codesOptions: readonly string[] = ['Code in the text', 'Code in block'];
 
     @ViewChildren('button')
     private readonly buttons: QueryList<TuiButtonComponent> = EMPTY_QUERY;
@@ -149,7 +147,7 @@ export class TuiToolbarComponent {
         private readonly imageLoader: TuiHandler<File, Observable<string>>,
         @Inject(USER_AGENT) private readonly userAgent: string,
         @Inject(TUI_EDITOR_TOOLBAR_TEXTS)
-        readonly texts: Record<EditorToolbarTexts, string>,
+        readonly texts: Record<string, string>,
     ) {
         this.documentRef = shadowRootRef || documentRef;
 
@@ -282,7 +280,7 @@ export class TuiToolbarComponent {
             this.documentRef.queryCommandValue('foreColor') || 'rgb(51, 51, 51)';
 
         // Number in IE
-        return typeof color === 'number' ? this.numberToColor(color) : color;
+        return isNumber(color) ? this.numberToColor(color) : color;
     }
 
     get hiliteColor(): string {
@@ -291,7 +289,7 @@ export class TuiToolbarComponent {
             const color = this.documentRef.queryCommandValue('backColor');
 
             // Number in IE
-            return typeof color === 'number' && color !== IE_TRANSPARENT
+            return isNumber(color) && color !== IE_TRANSPARENT
                 ? this.numberToColor(color)
                 : color;
         }

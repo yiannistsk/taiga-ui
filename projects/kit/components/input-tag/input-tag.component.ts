@@ -41,8 +41,8 @@ import {
     TEXTFIELD_CONTROLLER_PROVIDER,
     TUI_DATA_LIST_HOST,
     TUI_HINT_WATCHED_CONTROLLER,
+    TUI_TEXTFIELD_APPEARANCE,
     TUI_TEXTIFELD_WATCHED_CONTROLLER,
-    TuiAppearance,
     TuiDataListDirective,
     TuiDataListHost,
     TuiHintControllerDirective,
@@ -52,12 +52,12 @@ import {
     TuiScrollbarComponent,
     TuiSizeL,
     TuiSizeS,
-    TuiTableModeDirective,
     TuiTextfieldController,
 } from '@taiga-ui/core';
 import {ALLOWED_SPACE_REGEXP} from '@taiga-ui/kit/components/tag';
 import {TuiStatus} from '@taiga-ui/kit/enums';
 import {FIXED_DROPDOWN_CONTROLLER_PROVIDER} from '@taiga-ui/kit/providers';
+import {TUI_TAG_STATUS} from '@taiga-ui/kit/tokens';
 import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {merge, Subject} from 'rxjs';
 import {filter, map, mapTo, switchMap, takeUntil} from 'rxjs/operators';
@@ -174,12 +174,11 @@ export class TuiInputTagComponent
         @Inject(ChangeDetectorRef) changeDetectorRef: ChangeDetectorRef,
         @Inject(TuiScrollService) private tuiScrollService: TuiScrollService,
         @Inject(ElementRef) private readonly elementRef: ElementRef<HTMLElement>,
-        @Optional()
-        @Inject(TuiTableModeDirective)
-        private readonly tableMode: TuiTableModeDirective | null,
+        @Inject(TUI_TEXTFIELD_APPEARANCE) readonly appearance: string,
         @Optional()
         @Inject(TuiModeDirective)
         private readonly modeDirective: TuiModeDirective | null,
+        @Inject(TUI_TAG_STATUS) private readonly tagStatus: TuiStatus,
         @Inject(TUI_HINT_WATCHED_CONTROLLER)
         readonly hintController: TuiHintControllerDirective,
         @Inject(TUI_TEXTIFELD_WATCHED_CONTROLLER)
@@ -264,11 +263,7 @@ export class TuiInputTagComponent
     get status(): TuiStatus {
         return this.modeDirective && this.modeDirective.mode
             ? TuiStatus.Default
-            : TuiStatus.Primary;
-    }
-
-    get appearance(): TuiAppearance {
-        return this.tableMode ? TuiAppearance.Table : TuiAppearance.Textfield;
+            : this.tagStatus;
     }
 
     getLeftContent(tag: string): PolymorpheusContent | null {

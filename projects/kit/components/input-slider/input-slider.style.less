@@ -4,10 +4,10 @@
 @padding2: @padding * 2;
 
 :host {
-    .text-body-m(2);
+    font: var(--tui-font-text-m);
     .createStackingContext();
     display: block;
-    border-radius: var(--tui-radius);
+    border-radius: var(--tui-radius-m);
     color: var(--tui-text-01);
 
     &._segmented {
@@ -35,14 +35,14 @@
     }
 
     :host[data-tui-host-size='l'] & {
-        padding: @padding-top-when-transformed @padding 0;
+        padding: 20px @padding 0;
     }
 
-    :host[data-tui-host-mode='onDark'] & {
+    :host[data-mode='onDark'] & {
         color: var(--tui-text-01-night);
     }
 
-    :host[data-tui-host-mode='onDark']._disabled & {
+    :host[data-mode='onDark']._disabled & {
         color: var(--tui-text-03-night);
     }
 }
@@ -50,12 +50,12 @@
 .content {
     display: flex;
     align-items: center;
-    height: @height-large;
+    height: var(--tui-height-m);
     padding: 0 @padding;
     justify-content: space-between;
 
     :host[data-tui-host-size='l'] & {
-        height: @height-extra-large;
+        height: var(--tui-height-l);
         padding: 0 @padding;
     }
 }
@@ -64,8 +64,8 @@
     .textfield-placeholder();
     .fullsize();
     left: @padding;
-    transform: @placeholder-transformed;
-    line-height: @height-extra-large;
+    transform: translateY(-10px) scale(0.87);
+    line-height: var(--tui-height-l);
     max-width: ~'calc(114% - @{padding2})';
 
     :host._has-tooltip & {
@@ -83,19 +83,18 @@
     text-overflow: ellipsis;
 
     :host[data-tui-host-size='l'] & {
-        padding-top: @padding-top-when-transformed;
+        padding-top: 20px;
     }
 }
 
 .secondary {
     color: var(--tui-text-01);
-    font-size: 17px;
 
     :host._disabled & {
         color: var(--tui-text-03);
     }
 
-    :host[data-tui-host-mode='onDark']._disabled & {
+    :host[data-mode='onDark']._disabled & {
         color: var(--tui-text-03-night);
     }
 }

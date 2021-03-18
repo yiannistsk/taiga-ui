@@ -22,15 +22,20 @@ import {default as exampleModule} from '!!raw-loader!./examples/import/module.tx
 import {default as exampleServiceUsage} from '!!raw-loader!./examples/import/service-usage.txt';
 
 import {Component, Inject, TemplateRef} from '@angular/core';
-import {TuiDialogContext, TuiDialogService, TuiDialogSize} from '@taiga-ui/core';
+import {
+    TuiDialogContext,
+    TuiDialogService,
+    TuiDialogSize,
+    TuiNotificationsService,
+} from '@taiga-ui/core';
+import {switchMap} from 'rxjs/operators';
 import {changeDetection} from '../../../change-detection-strategy';
-import {LogService} from '../../app/log.service';
 import {FrontEndExample} from '../../interfaces/front-end-example';
 
 const TOKEN = `{
     provide: TUI_DIALOGS_CLOSE,
     deps: [Router],
-    useFactory: ({events}) => events.pipe(filter(event => event instanceof NavigationStart)),
+    useFactory: ({events}) => events,
 }`;
 
 @Component({
@@ -38,7 +43,6 @@ const TOKEN = `{
     templateUrl: './dialogs.template.html',
     styleUrls: ['./dialogs.style.less'],
     changeDetection,
-    providers: [LogService],
 })
 export class ExampleTuiDialogsComponent {
     readonly token = TOKEN;
@@ -84,14 +88,21 @@ export class ExampleTuiDialogsComponent {
 
     required = false;
 
-    readonly sizeVariants: ReadonlyArray<TuiDialogSize> = ['s', 'm', 'l', 'fullscreen'];
+    readonly sizeVariants: ReadonlyArray<TuiDialogSize> = [
+        's',
+        'm',
+        'l',
+        'fullscreen',
+        'page',
+    ];
 
     size: TuiDialogSize = this.sizeVariants[1];
 
     label = '';
 
     constructor(
-        @Inject(LogService) private log: LogService,
+        @Inject(TuiNotificationsService)
+        private readonly notifications: TuiNotificationsService,
         @Inject(TuiDialogService) private readonly dialogService: TuiDialogService,
     ) {}
 
@@ -100,8 +111,7 @@ export class ExampleTuiDialogsComponent {
 
         this.dialogService
             .open(content, {data, label, required, closeable, dismissible, size})
-            .subscribe(response => {
-                this.log.log(response);
-            });
+            .pipe(switchMap(response => this.notifications.show(String(response))))
+            .subscribe();
     }
 }

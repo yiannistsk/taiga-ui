@@ -9,7 +9,8 @@
         ></tui-tag>
         <tui-tag
             *ngIf="package"
-            class="tag"
+            class="tag tag_package"
+            status="custom"
             [value]="package"
             [autoColor]="true"
         ></tui-tag>
@@ -49,6 +50,8 @@
         class="source-code"
         [header]="header"
         [package]="package"
+        [type]="type"
+        [path]="path"
     ></tui-doc-source-code>
 </header>
 <div class="content">

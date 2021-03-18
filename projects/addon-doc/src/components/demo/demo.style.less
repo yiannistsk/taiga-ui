@@ -29,7 +29,7 @@
     .shadow(2);
     display: flex;
     border: 1px solid var(--tui-base-03);
-    border-radius: var(--tui-radius);
+    border-radius: var(--tui-radius-m);
     max-width: 100%;
     min-height: 96px;
     width: 100%;
@@ -115,6 +115,10 @@
     border-radius: 4px;
 }
 
+.mode {
+    width: 200px;
+}
+
 .select {
     max-width: 240px;
 }
@@ -157,7 +161,7 @@
 }
 
 .resizer-text {
-    .text-body-s();
+    font: var(--tui-font-text-s);
     position: relative;
     z-index: 1;
     padding: 12px;
@@ -169,9 +173,11 @@
 }
 
 @supports (position: sticky) {
-    :host {
-        position: sticky;
-        top: 8px;
-        z-index: 2;
+    @media screen and (min-height: 600px) {
+        :host {
+            position: sticky;
+            top: 74px;
+            z-index: 2;
+        }
     }
 }

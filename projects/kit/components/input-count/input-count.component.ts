@@ -19,23 +19,25 @@ import {
     isPresent,
     setNativeFocused,
     TUI_FOCUSABLE_ITEM_ACCESSOR,
+    TUI_IS_MOBILE,
     tuiDefaultProp,
     TuiFocusableElementAccessor,
 } from '@taiga-ui/cdk';
 import {
     formatNumber,
+    TUI_TEXTFIELD_APPEARANCE,
     TUI_TEXTFIELD_SIZE,
+    TuiAppearance,
     tuiCreateNumberMask,
     TuiPrimitiveTextfieldComponent,
     TuiSizeL,
     TuiSizeS,
-    TuiTableModeDirective,
     TuiTextfieldSizeDirective,
     TuiTextMaskOptions,
     TuiWithOptionalMinMax,
-    TuiWithTextMask,
 } from '@taiga-ui/core';
 import {TUI_PLUS_MINUS_TEXTS} from '@taiga-ui/kit/tokens';
+import {Observable} from 'rxjs';
 
 // @dynamic
 @Component({
@@ -52,10 +54,7 @@ import {TUI_PLUS_MINUS_TEXTS} from '@taiga-ui/kit/tokens';
 })
 export class TuiInputCountComponent
     extends AbstractTuiControl<number>
-    implements
-        TuiWithOptionalMinMax<number>,
-        TuiWithTextMask,
-        TuiFocusableElementAccessor {
+    implements TuiWithOptionalMinMax<number>, TuiFocusableElementAccessor {
     @Input()
     @tuiDefaultProp()
     step = 1;
@@ -90,13 +89,13 @@ export class TuiInputCountComponent
         @Inject(NgControl)
         control: NgControl | null,
         @Inject(ChangeDetectorRef) changeDetectorRef: ChangeDetectorRef,
-        @Optional()
-        @Inject(TuiTableModeDirective)
-        private readonly tableMode: TuiTableModeDirective | null,
+        @Inject(TUI_TEXTFIELD_APPEARANCE)
+        private readonly appearance: string,
         @Inject(TUI_TEXTFIELD_SIZE)
         private readonly textfieldSize: TuiTextfieldSizeDirective,
         @Inject(TUI_PLUS_MINUS_TEXTS)
-        readonly minusTexts: [string, string],
+        readonly minusTexts$: Observable<[string, string]>,
+        @Inject(TUI_IS_MOBILE) private readonly isMobile: boolean,
     ) {
         super(control, changeDetectorRef);
     }
@@ -118,7 +117,7 @@ export class TuiInputCountComponent
 
     @HostBinding('class._has-buttons')
     get hasButtons(): boolean {
-        return !this.hideButtons && !this.tableMode;
+        return !this.hideButtons && this.appearance !== TuiAppearance.Table;
     }
 
     get exampleText(): string {
@@ -146,7 +145,7 @@ export class TuiInputCountComponent
     }
 
     onButtonMouseDown(event: MouseEvent, disabled: boolean = false) {
-        if (disabled || !this.nativeFocusableElement) {
+        if (disabled || !this.nativeFocusableElement || this.isMobile) {
             return;
         }
 

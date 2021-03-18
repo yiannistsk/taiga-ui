@@ -2,7 +2,6 @@ import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {identity, TuiStringHandler} from '@taiga-ui/cdk';
 import {
     TuiDataListModule,
     tuiEditingKeys,
@@ -11,15 +10,12 @@ import {
     TuiSizeL,
     TuiSizeS,
     TuiTextfieldControllerModule,
-    TuiTextMaskOptions,
 } from '@taiga-ui/core';
 import {TuiDataListWrapperModule} from '@taiga-ui/kit/components';
 import {activeText, dispatchOnActive, NativeInputPO, PageObject} from '@taiga-ui/testing';
 import {configureTestSuite} from 'ng-bullet';
 import {TuiInputComponent} from '../input.component';
 import {TuiInputModule} from '../input.module';
-
-const D = /\d/;
 
 class User {
     constructor(
@@ -54,8 +50,6 @@ describe('Input', () => {
                         [tuiTextfieldSize]="size"
                         [tuiHintContent]="hintContent"
                         [readOnly]="readOnly"
-                        [textMaskOptions]="textMaskOptions"
-                        [unmaskHandler]="unmaskHandler"
                     >
                         <tui-data-list-wrapper
                             *tuiDataList
@@ -87,11 +81,7 @@ describe('Input', () => {
 
         exampleText = 'placeholder';
 
-        hintContent: string | null = 'Подсказка';
-
-        textMaskOptions: TuiTextMaskOptions | null = null;
-
-        unmaskHandler: TuiStringHandler<string> = identity;
+        hintContent: string | null = 'prompt';
 
         group = new FormGroup({control: new FormControl()});
 
@@ -134,39 +124,14 @@ describe('Input', () => {
         inputPO = new NativeInputPO(fixture, `tui-primitive-textfield__native-input`);
     });
 
-    describe('Mask', () => {
-        beforeEach(() => {
-            testComponent.textMaskOptions = {
-                guide: false,
-                mask: [D, D, D, D, ' ', D, D, D, D, ' ', D, D, D, D, ' ', D, D, D, D],
-            };
-            fixture.detectChanges();
-        });
-
-        it('Masks value', () => {
-            inputPO.sendText('12345');
-
-            expect(testComponent.control.value).toBe('1234 5');
-        });
-
-        it('unmasks value', () => {
-            testComponent.unmaskHandler = value => value.replace(/ /g, '');
-            fixture.detectChanges();
-            inputPO.sendText('12345');
-
-            expect(inputPO.value).toBe('1234 5');
-            expect(testComponent.control.value).toBe('12345');
-        });
-    });
-
-    describe('Автокомплит', () => {
+    describe('Autocomplete', () => {
         beforeEach(() => {
             fixture.detectChanges();
             inputPO.focus();
         });
 
-        describe('Выпадашка появляется', () => {
-            it('при нажатии стрелки вниз', () => {
+        describe('Dropdown appears', () => {
+            it('down arrow', () => {
                 inputPO.sendKeydown('arrowDown');
 
                 expect(getDropdown()).not.toBeNull();
@@ -179,12 +144,12 @@ describe('Input', () => {
             });
         });
 
-        describe('Выпадашка не появляется', () => {
-            it('Выпадашка не появляется при фокусе', () => {
+        describe('Dropdown does not appear', () => {
+            it('Dropdown does not appear on focus', () => {
                 expect(getDropdown()).toBeNull();
             });
 
-            it('при нажатии стрелки вниз когда стоит readonly', () => {
+            it('down arrow when readonly is on', () => {
                 testComponent.readOnly = true;
                 fixture.detectChanges();
                 inputPO.sendKeydown('arrowDown');
@@ -193,14 +158,14 @@ describe('Input', () => {
             });
         });
 
-        it('Выпадашка скрывается по Esc', () => {
+        it('Dropdown is hidden by Esc', () => {
             inputPO.sendText('ен');
             inputPO.sendKeydown('escape');
 
             expect(getDropdown()).toBeNull();
         });
 
-        it('Значение подставляется при выборе элемента из выпадашки', () => {
+        it('The value is substituted when selecting an item from the dropdown', () => {
             inputPO.sendText('ен');
             pageObject
                 .getByAutomationId('tui-data-list-wrapper__option')!
@@ -210,26 +175,26 @@ describe('Input', () => {
         });
     });
 
-    describe('Обновление состояния контрола', () => {
+    describe('Updating the state of the control', () => {
         beforeEach(() => {
             updateSpy = spyOn(testComponent.component, 'checkControlUpdate');
         });
 
-        it('updateValueAndValidity вызывает обновление контрола', () => {
+        it('updateValueAndValidity causes the control to be updated', () => {
             testComponent.control.updateValueAndValidity();
             fixture.detectChanges();
 
             expect(updateSpy).toHaveBeenCalled();
         });
 
-        it('setErrors вызывает обновление контрола', () => {
+        it('setErrors calls update of the control', () => {
             testComponent.control.setErrors({test: true});
             fixture.detectChanges();
 
             expect(updateSpy).toHaveBeenCalled();
         });
 
-        it('Обновление контрола обновляет инпут', done => {
+        it('Updating the control updates the input', done => {
             testComponent.control.setValue('321');
             fixture.detectChanges();
             fixture.whenStable().then(() => {
@@ -241,7 +206,7 @@ describe('Input', () => {
             });
         });
 
-        it('updateOn: change обновляется по смене значения', () => {
+        it('updateOn: change is updated when the value is changed', () => {
             testComponent.control.setValue('321');
             fixture.detectChanges();
             inputPO.sendText('123');
@@ -249,7 +214,7 @@ describe('Input', () => {
             expect(testComponent.control.value).toBe('123');
         });
 
-        it('updateOn: blur не обновляется по смене значения', () => {
+        it('updateOn: blur is not updated on value change', () => {
             testComponent.group = new FormGroup({
                 control: new FormControl('321', {updateOn: 'blur'}),
             });
@@ -261,7 +226,7 @@ describe('Input', () => {
             expect(testComponent.control.value).toBe('321');
         });
 
-        it('updateOn: blur обновляется по выходу из поля', () => {
+        it('updateOn: blur is updated on leaving the field', () => {
             testComponent.group = new FormGroup({
                 control: new FormControl('321', {updateOn: 'blur'}),
             });
@@ -274,7 +239,7 @@ describe('Input', () => {
             expect(testComponent.control.value).toBe('123');
         });
 
-        it('updateOn: submit не обновляется по смене значения', () => {
+        it('updateOn: submit is not updated on value change', () => {
             testComponent.group = new FormGroup({
                 control: new FormControl('321', {updateOn: 'submit'}),
             });
@@ -286,7 +251,7 @@ describe('Input', () => {
             expect(testComponent.control.value).toBe('321');
         });
 
-        it('updateOn: submit не обновляется по выходу из поля', () => {
+        it('updateOn: submit is not updated on leaving the field', () => {
             testComponent.group = new FormGroup({
                 control: new FormControl('321', {updateOn: 'submit'}),
             });
@@ -299,7 +264,7 @@ describe('Input', () => {
             expect(testComponent.control.value).toBe('321');
         });
 
-        it('updateOn: submit обновляется по сабмиту формы', () => {
+        it('updateOn: submit is updated on form submission', () => {
             testComponent.group = new FormGroup({
                 control: new FormControl('321', {updateOn: 'submit'}),
             });
@@ -313,7 +278,7 @@ describe('Input', () => {
         });
     });
 
-    describe('Возврат в поле при вводе', () => {
+    describe('Return to field as you type', () => {
         beforeEach(() => {
             fixture.detectChanges();
             inputPO.focus();
@@ -321,60 +286,60 @@ describe('Input', () => {
             inputPO.sendKeydown('ArrowDown');
         });
 
-        it('Фокус в выпадашке', () => {
+        it('Focus in the dropdown', () => {
             expect(activeText()).toBe(ITEMS[0].toString());
         });
 
-        it('Ввод символов переносит фокус в поле ввода', () => {
+        it('Entering characters brings focus to the input field', () => {
             dispatchOnActive('e');
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
 
-        it(`Нажатие ${tuiEditingKeys[0]} переносит фокус в поле ввода`, () => {
+        it(`Pressing ${tuiEditingKeys[0]} moves focus to the input field`, () => {
             dispatchOnActive(tuiEditingKeys[0]);
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
 
-        it(`Нажатие ${tuiEditingKeys[1]} переносит фокус в поле ввода`, () => {
+        it(`Pressing ${tuiEditingKeys[1]} moves focus to the input field`, () => {
             dispatchOnActive(tuiEditingKeys[1]);
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
 
-        it(`Нажатие ${tuiEditingKeys[2]} переносит фокус в поле ввода`, () => {
+        it(`Pressing ${tuiEditingKeys[2]} moves focus to the input field`, () => {
             dispatchOnActive(tuiEditingKeys[2]);
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
 
-        it(`Нажатие ${tuiEditingKeys[3]} переносит фокус в поле ввода`, () => {
+        it(`Pressing ${tuiEditingKeys[3]} moves focus to the input field`, () => {
             dispatchOnActive(tuiEditingKeys[3]);
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
 
-        it(`Нажатие ${tuiEditingKeys[4]} переносит фокус в поле ввода`, () => {
+        it(`Pressing ${tuiEditingKeys[4]} moves focus to the input field`, () => {
             dispatchOnActive(tuiEditingKeys[4]);
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
 
-        it(`Нажатие ${tuiEditingKeys[5]} переносит фокус в поле ввода`, () => {
+        it(`Pressing ${tuiEditingKeys[5]} moves focus to the input field`, () => {
             dispatchOnActive(tuiEditingKeys[5]);
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
 
-        it(`Нажатие ${tuiEditingKeys[6]} переносит фокус в поле ввода`, () => {
+        it(`Pressing ${tuiEditingKeys[6]} moves focus to the input field`, () => {
             dispatchOnActive(tuiEditingKeys[6]);
 
             expect(document.activeElement).toBe(inputPO.nativeElement);
         });
     });
 
-    it('Загрузка показана при items === null', () => {
+    it('Loading shown when items === null', () => {
         testComponent.items = null;
         fixture.detectChanges();
         inputPO.focus();

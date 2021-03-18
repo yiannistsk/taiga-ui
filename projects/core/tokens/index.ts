@@ -1,3 +1,4 @@
+export * from './assert-enabled';
 export * from './data-list-accessor';
 export * from './data-list-host';
 export * from './document-or-shadow-root';
@@ -8,5 +9,7 @@ export * from './icons';
 export * from './icons-path';
 export * from './mode';
 export * from './option-content';
+export * from './sanitizer';
 export * from './scroll-ref';
+export * from './textfield-appearance';
 export * from './value-accessor';

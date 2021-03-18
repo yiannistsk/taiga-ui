@@ -81,7 +81,7 @@ export class TuiTabsWithMoreComponent implements AfterViewInit {
         @Inject(ElementRef) private readonly elementRef: ElementRef<HTMLElement>,
         @Inject(Renderer2) private readonly renderer: Renderer2,
         @Inject(ChangeDetectorRef) private readonly changeDetectorRef: ChangeDetectorRef,
-        @Inject(TUI_MORE_WORD) readonly moreWord: string,
+        @Inject(TUI_MORE_WORD) readonly moreWord$: Observable<string>,
     ) {}
 
     @tuiPure
@@ -147,12 +147,14 @@ export class TuiTabsWithMoreComponent implements AfterViewInit {
         this.renderer.addClass(active, TAB_ACTIVE_CLASS);
     }
 
-    onClick(target: HTMLElement, currentTarget: HTMLElement) {
-        const buttons = Array.from(currentTarget.children);
-        const index = buttons.findIndex(button => button.contains(target));
-
+    onClick() {
         this.open = false;
         this.focusMore();
+    }
+
+    onActivate(tab: HTMLElement, {children}: HTMLElement) {
+        const elements = Array.from(children);
+        const index = elements.findIndex(element => element === tab);
 
         if (index !== -1) {
             this.updateActiveItemIndex(index + this.lastVisibleIndex + 1);

@@ -1,13 +1,15 @@
-@import '../../../styles/basic/basic-imports';
+@import '../../../styles/taiga-ui-local.less';
 
 :host {
     .shadow(2);
     display: block;
-    border-radius: var(--tui-radius);
+    border-radius: var(--tui-radius-m);
 }
 
 .heading {
-    .text-body-m-bold(2);
+    font: var(--tui-font-text-m);
+    line-height: 20px;
+    font-weight: bold;
     margin: 0;
 }
 

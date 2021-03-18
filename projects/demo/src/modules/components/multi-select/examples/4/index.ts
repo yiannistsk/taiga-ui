@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {TUI_DEFAULT_MATCHER, TuiContextWithImplicit} from '@taiga-ui/cdk';
+import {isNumber, TUI_DEFAULT_MATCHER, TuiContextWithImplicit} from '@taiga-ui/cdk';
 import {Subject, timer} from 'rxjs';
 import {map, mapTo, shareReplay, startWith, switchMap} from 'rxjs/operators';
 import {changeDetection} from '../../../../../change-detection-strategy';
@@ -17,7 +17,6 @@ const DICTIONARY = [
 @Component({
     selector: 'tui-multi-select-example-4',
     templateUrl: './index.html',
-    styleUrls: ['./index.less'],
     changeDetection,
 })
 export class TuiMultiSelectExample4 {
@@ -54,7 +53,7 @@ export class TuiMultiSelectExample4 {
         ),
         startWith(new Map()),
         map(map => (id: number | TuiContextWithImplicit<number>) =>
-            (typeof id === 'number' ? map.get(id) : map.get(id.$implicit)) || '',
+            (isNumber(id) ? map.get(id) : map.get(id.$implicit)) || '',
         ),
     );
 
